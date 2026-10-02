@@ -1,4 +1,4 @@
-/* Programmi Pertini & Nasta — sito a una pagina con indirizzi navigabili (#/scuola/indirizzo/classe/materia) */
+/* Programmi di matematica e fisica (Pertini, Nasta, Giovanni Paolo II) — sito a una pagina con indirizzi navigabili (#/scuola/indirizzo/classe/materia) */
 (() => {
 'use strict';
 
@@ -10,8 +10,12 @@ const SCHOOLS = {
   Nasta: { key: 'nasta', name: 'Istituto Giuseppe Nasta', short: 'Nasta', mono: 'GN',
     place: 'Via Tenente Lignola 20 · Corbara (SA)',
     site: 'https://www.istitutoparitarionasta.it/indirizzi-di-studio/', siteLbl: 'Indirizzi sul sito della scuola' },
+  GP2: { key: 'giovannipaolo2', name: 'Istituto Giovanni Paolo II', short: 'Giovanni Paolo II', mono: 'GP',
+    place: 'Corso Duca di Genova 157 · Ostia (Roma)',
+    site: 'https://www2.istitutogiovannipaolo2.it/indirizzi/', siteLbl: 'Indirizzi sul sito della scuola' },
 };
-const ORDER = ['Pertini', 'Nasta'];
+const ORDER = ['Pertini', 'Nasta', 'GP2'];
+const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
 
 const ICON = {
   right: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
@@ -61,17 +65,31 @@ function splitTitle(t) {
   return { group: '', label: '', title: t };
 }
 
+/* Alcuni PDF scrivono un argomento come paragrafo: «Il piano cartesiano: le coordinate – i segmenti – la retta».
+   Lo mostro come sottotitolo con il suo elenco; senza sottotitolo diventa più voci. */
+const SEP = /\s*–\s*|\s+-\s+/;
+function expandItem(a) {
+  const m = a.match(/^([^:]{3,90}):\s*(.+)$/);
+  const parts = (m ? m[2] : a).split(SEP).map(x => x.trim()).filter(Boolean);
+  if (parts.length < 2) return [{ t: a }];
+  return m ? [{ t: m[1].trim(), sub: parts }] : parts.map(t => ({ t }));
+}
+
 /* ---------- preparazione dei dati ---------- */
 const INDS = new Map();
 DATA.forEach(d => {
   d.S = SCHOOLS[d.ist];
   d.sk = d.S.key;
   d.ck = d.code.toLowerCase();
-  d.pk = d.cat + (d.sez ? '-' + d.sez.toLowerCase() : '');
+  // pk esplicito quando una classe ha due programmi della stessa area (Matematica e Complementi)
+  d.pk = d.pk || d.cat + (d.sez ? '-' + d.sez.toLowerCase() : '');
   d.oldId = (d.ist + '-' + d.code + '-' + d.n + (d.sez || '') + '-' + d.cat).toLowerCase();
   d.warn = d.moduli.length === 0 || d.moduli.every(m => m.a.length === 0) || /errat|per errore|si interrompe|manca il modulo/i.test(d.note);
-  d.topics = d.moduli.reduce((s, m) => s + m.a.length, 0);
-  d.blocks = d.moduli.map(m => Object.assign(splitTitle(m.t), { items: m.a, raw: m.t }));
+  d.blocks = d.moduli.map(m => {
+    const list = m.a.flatMap(expandItem);
+    return Object.assign(splitTitle(m.t), { items: m.a, list, leaves: list.reduce((s, x) => s + (x.sub ? x.sub.length : 1), 0), raw: m.t });
+  });
+  d.topics = d.blocks.reduce((s, b) => s + b.leaves, 0);
   if (!d.blocks.some(b => b.label)) d.blocks.forEach((b, i) => { b.label = String(i + 1); });
   const key = d.sk + '/' + d.ck;
   if (!INDS.has(key)) INDS.set(key, { key, ist: d.ist, S: d.S, code: d.code, ck: d.ck, ind: d.ind, tipo: d.tipo, progs: [] });
@@ -110,7 +128,7 @@ function tile(I) {
 }
 
 function pageHome() {
-  document.title = 'Programmi di Matematica e Fisica · Pertini e Nasta';
+  document.title = 'Programmi di Matematica e Fisica · Pertini, Nasta, Giovanni Paolo II';
   const schools = ORDER.map(ist => {
     const S = SCHOOLS[ist];
     const inds = [...INDS.values()].filter(I => I.ist === ist);
@@ -126,12 +144,12 @@ function pageHome() {
   app.innerHTML = `<div class="fade">
     <section class="hero wrap">
       <p class="eyebrow">Matematica e Fisica · istituti paritari</p>
-      <h1>I programmi del <em>Pertini</em> e del <em>Nasta</em>, classe per classe</h1>
-      <p class="lead">Gli argomenti pubblicati dalle due scuole, riordinati per indirizzo, classe e blocco tematico. Ogni programma rimanda al PDF originale.</p>
+      <h1>I programmi del <em>Pertini</em>, del <em>Nasta</em> e del <em>Giovanni&nbsp;Paolo&nbsp;II</em>, classe per classe</h1>
+      <p class="lead">Gli argomenti pubblicati da tre scuole paritarie, riordinati per indirizzo, classe e blocco tematico. Ogni programma rimanda al PDF originale.</p>
       ${searchForm('', false)}
       ${suggestChips()}
       <div class="stats">
-        <div><b>2</b>istituti</div><div><b>${INDS.size}</b>indirizzi</div>
+        <div><b>${ORDER.length}</b>istituti</div><div><b>${INDS.size}</b>indirizzi</div>
         <div><b>${DATA.length}</b>programmi</div><div><b>${TOTAL_TOPICS.toLocaleString('it-IT')}</b>argomenti</div>
       </div>
     </section>
@@ -152,9 +170,12 @@ function blocksHtml(d, rx) {
       if (group) h += `<div class="group"><h3>${hl(group, rx)}</h3></div>`;
     }
     if (!open) openGrid();
-    const wide = b.items.length > 14 || (d.blocks.length === 1 && b.items.length > 6);
-    const body = titlesOnly ? '' : b.items.length
-      ? '<ul>' + b.items.map(a => `<li>${hl(a, rx)}</li>`).join('') + '</ul>'
+    const wide = b.leaves > 14 || (d.blocks.length === 1 && b.leaves > 6);
+    const li = x => x.sub
+      ? `<li class="has-sub"><b>${hl(x.t, rx)}</b><ul class="sub">${x.sub.map(s => `<li>${hl(s, rx)}</li>`).join('')}</ul></li>`
+      : `<li>${hl(x.t, rx)}</li>`;
+    const body = titlesOnly ? '' : b.list.length
+      ? '<ul>' + b.list.map(li).join('') + '</ul>'
       : '<p class="empty">Solo il titolo: il PDF non elenca argomenti.</p>';
     h += `<article class="block${wide ? ' wide' : ''}">
       <div class="block-h">${b.label ? `<span class="num">${esc(b.label)}</span>` : ''}<h4>${hl(b.title, rx)}</h4></div>
@@ -187,6 +208,13 @@ function pageInd(I, n, pk, q) {
   const meta = d.topics
     ? `${plural(d.blocks.length, 'blocco', 'blocchi')} · ${plural(d.topics, 'argomento', 'argomenti')}`
     : d.blocks.length ? `${plural(d.blocks.length, 'titolo', 'titoli')}, senza argomenti nel PDF` : 'Programma non disponibile';
+  const twins = (d.uguale || []).map(name => {
+    const T = [...INDS.values()].find(J => J.ist === I.ist && J.ind === name);
+    const t = T && T.progs.find(p => p.n === d.n && p.mat === d.mat);
+    return t ? `<a href="${href(t)}">${esc(name)}</a>` : esc(name);
+  });
+  const same = twins.length ? `<div class="same">Stesso programma pubblicato anche per: ${twins.join(', ')}</div>` : '';
+  const agg = d.agg ? ` · PDF caricato a ${MESI[+d.agg.slice(5, 7) - 1]} ${d.agg.slice(0, 4)}` : '';
   const note = d.note ? `<div class="note${d.moduli.length ? '' : ' big'}">${ICON.info}<div>${d.warn ? '<b>Da verificare.</b> ' : '<b>Nota.</b> '}${hl(d.note, rx)}</div></div>` : '';
 
   const ci = classes.indexOf(n);
@@ -211,7 +239,7 @@ function pageInd(I, n, pk, q) {
     </div></div>
     <section class="prog fade" id="prog" aria-labelledby="h-prog">
       <div class="prog-head">
-        <div><h2 id="h-prog"><small>${esc(classLabel(d))}</small>${esc(d.mat)}</h2><div class="meta">${meta}</div></div>
+        <div><h2 id="h-prog"><small>${esc(classLabel(d))}</small>${esc(d.mat)}</h2><div class="meta">${meta}${agg}</div>${same}</div>
         <div class="prog-actions">
           <a class="btn ghost" href="${esc(d.url)}" target="_blank" rel="noopener">${ICON.doc}PDF originale</a>
           <button class="btn ghost" type="button" data-print>${ICON.print}Stampa</button>
@@ -235,7 +263,10 @@ function resultsHtml(q) {
     const hits = [];
     d.blocks.forEach(b => {
       if (norm(b.raw).includes(nq)) hits.push({ t: b.title, kind: 'blocco' });
-      b.items.forEach(a => { if (norm(a).includes(nq)) hits.push({ t: a, in: b.title }); });
+      b.list.forEach(x => {
+        if (norm(x.t).includes(nq)) hits.push({ t: x.t, in: b.title });
+        (x.sub || []).forEach(s => { if (norm(s).includes(nq)) hits.push({ t: s, in: x.t }); });
+      });
     });
     if (hits.length) { res.push({ d, hits }); nHits += hits.length; }
   });
@@ -249,7 +280,7 @@ function resultsHtml(q) {
 }
 
 function pageSearch(q) {
-  document.title = (q ? `«${q}» · ` : '') + 'Cerca · Programmi Pertini e Nasta';
+  document.title = (q ? `«${q}» · ` : '') + 'Cerca · Programmi di matematica e fisica';
   app.innerHTML = `<section class="search-page wrap fade">
     <h1>Cerca un argomento</h1>
     ${searchForm(q, true)}
@@ -264,7 +295,7 @@ function pageSearch(q) {
       const v = inp.value;
       try { history.replaceState(null, '', '#/cerca' + (v.trim() ? '/' + encodeURIComponent(v) : '')); } catch (_) {}
       document.getElementById('res').innerHTML = resultsHtml(v);
-      document.title = (v.trim() ? `«${v.trim()}» · ` : '') + 'Cerca · Programmi Pertini e Nasta';
+      document.title = (v.trim() ? `«${v.trim()}» · ` : '') + 'Cerca · Programmi di matematica e fisica';
     }, 140);
   });
 }

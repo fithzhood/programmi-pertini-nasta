@@ -71,9 +71,9 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .hero{padding-block:56px 34px}
 .eyebrow{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
 .hero h1{font-size:clamp(2rem,5.6vw,3.4rem);max-width:20ch}
-.hero h1 em{font-style:normal;color:var(--pertini)}
+.hero h1 em{font-style:normal;color:var(--gp2)}
 .hero h1 em:nth-of-type(2){color:var(--nasta)}
-.hero h1 em:nth-of-type(3){color:var(--gp2)}
+.hero h1 em:nth-of-type(3){color:var(--pertini)}
 .hero .lead{font-size:1.12rem;color:var(--muted);max-width:58ch;margin:18px 0 26px}
 .searchbox{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line);border-radius:999px;padding:6px 8px 6px 18px;max-width:560px;box-shadow:var(--shadow)}
 .searchbox:focus-within{border-color:var(--ink)}
@@ -89,15 +89,22 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .stats{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:30px;color:var(--muted);font-size:15px}
 .stats b{font-family:var(--f-display);font-size:1.7rem;color:var(--ink);display:block;line-height:1.1}
 
-.schools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:28px;padding-bottom:56px}
-.school-h{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.schools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:20px 28px;padding-bottom:56px;align-items:start}
+/* ogni scuola occupa due righe della griglia (intestazione, indirizzi) e le condivide con le vicine:
+   così le intestazioni hanno la stessa altezza e gli elenchi partono alla stessa quota */
+.school{display:grid;grid-row:span 2;grid-template-rows:subgrid;row-gap:16px;min-width:0}
+.school-h{display:grid;grid-template-columns:52px minmax(0,1fr);align-items:start;gap:14px;align-self:stretch}
+.school-txt{display:flex;flex-direction:column;gap:2px;min-width:0;padding-top:1px}
+.school-h .kicker{margin:0;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c)}
+.school-h .addr{margin:0;color:var(--muted);font-size:15px}
+.school-h .site{display:inline-flex;align-items:center;gap:5px;margin-top:2px;font-size:15px;align-self:flex-start}
+.school-h .site svg{width:14px;height:14px}
+.school-h .kicker,.school-h .addr,.school-h .site{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .mono{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:var(--c);color:#fff;font-family:var(--f-display);font-size:20px;font-weight:650;flex:none;letter-spacing:.02em}
 :root[data-theme="dark"] .mono{color:#13161c}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mono{color:#13161c}}
-.school-h h2{font-size:1.5rem}
-.school-h p{margin:2px 0 0;color:var(--muted);font-size:15px}
-.school-h p a{white-space:nowrap}
-.tiles{display:grid;gap:12px}
+.school-h h2{font-size:1.5rem;line-height:1.2}
+.tiles{display:grid;gap:12px;align-content:start}
 .tile{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px 16px;background:var(--surface);border-radius:var(--r);padding:16px 18px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:transform .15s ease,box-shadow .15s ease}
 .tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
 .code{display:inline-grid;place-items:center;min-width:3.4em;padding:6px 8px;border-radius:10px;background:var(--cs);color:var(--cd);font-weight:700;font-size:13px;letter-spacing:.04em}

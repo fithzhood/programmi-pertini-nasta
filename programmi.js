@@ -4,17 +4,19 @@
 
 const ROM = ['I', 'II', 'III', 'IV', 'V'];
 const SCHOOLS = {
-  Pertini: { key: 'pertini', name: 'Istituto Sandro Pertini', short: 'Pertini', mono: 'SP',
-    place: 'Via Cicalesi 19 · Nocera Inferiore (SA)',
-    site: 'https://www.istitutosandropertini.com/programma_scolastico', siteLbl: 'Programmi sul sito della scuola' },
-  Nasta: { key: 'nasta', name: 'Istituto Giuseppe Nasta', short: 'Nasta', mono: 'GN',
-    place: 'Via Tenente Lignola 20 · Corbara (SA)',
-    site: 'https://www.istitutoparitarionasta.it/indirizzi-di-studio/', siteLbl: 'Indirizzi sul sito della scuola' },
-  GP2: { key: 'giovannipaolo2', name: 'Istituto Giovanni Paolo II', short: 'Giovanni Paolo II', mono: 'GP',
-    place: 'Corso Duca di Genova 157 · Ostia (Roma)',
+  GP2: { key: 'giovannipaolo2', name: 'Istituto Giovanni Paolo II', short: 'Giovanni Paolo II', title: 'Giovanni Paolo II', mono: 'GP',
+    city: 'Ostia (Roma)', addr: 'Corso Duca di Genova 157',
     site: 'https://www2.istitutogiovannipaolo2.it/indirizzi/', siteLbl: 'Indirizzi sul sito della scuola' },
+  Nasta: { key: 'nasta', name: 'Istituto Giuseppe Nasta', short: 'Nasta', title: 'Giuseppe Nasta', mono: 'GN',
+    city: 'Corbara (SA)', addr: 'Via Tenente Lignola 20',
+    site: 'https://www.istitutoparitarionasta.it/indirizzi-di-studio/', siteLbl: 'Indirizzi sul sito della scuola' },
+  Pertini: { key: 'pertini', name: 'Istituto Sandro Pertini', short: 'Pertini', title: 'Sandro Pertini', mono: 'SP',
+    city: 'Nocera Inferiore (SA)', addr: 'Via Cicalesi 19',
+    site: 'https://www.istitutosandropertini.com/programma_scolastico', siteLbl: 'Programmi sul sito della scuola' },
 };
-const ORDER = ['Pertini', 'Nasta', 'GP2'];
+const ORDER = ['GP2', 'Nasta', 'Pertini'];
+// l'ordine delle scuole vale ovunque: pagina iniziale, ricerca, elenchi
+DATA.sort((a, b) => ORDER.indexOf(a.ist) - ORDER.indexOf(b.ist));
 const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
 
 const ICON = {
@@ -24,6 +26,7 @@ const ICON = {
   doc: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>',
   print: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V3h10v6"/><rect x="4" y="9" width="16" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg>',
   info: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>',
+  ext: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
   search: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>',
 };
 
@@ -128,15 +131,19 @@ function tile(I) {
 }
 
 function pageHome() {
-  document.title = 'Programmi di Matematica e Fisica · Pertini, Nasta, Giovanni Paolo II';
+  document.title = 'Programmi di Matematica e Fisica · Giovanni Paolo II, Nasta, Pertini';
   const schools = ORDER.map(ist => {
     const S = SCHOOLS[ist];
     const inds = [...INDS.values()].filter(I => I.ist === ist);
     return `<section class="school ${S.key}" aria-labelledby="h-${S.key}">
       <div class="school-h">
         <span class="mono" aria-hidden="true">${S.mono}</span>
-        <div><h2 id="h-${S.key}">${S.name}</h2>
-        <p>${S.place} · <a href="${S.site}" target="_blank" rel="noopener">${S.siteLbl}</a></p></div>
+        <div class="school-txt">
+          <p class="kicker">${S.city}</p>
+          <h2 id="h-${S.key}">${S.title}</h2>
+          <p class="addr">${S.addr}</p>
+          <a class="site" href="${S.site}" target="_blank" rel="noopener">${S.siteLbl}${ICON.ext}</a>
+        </div>
       </div>
       <div class="tiles">${inds.map(tile).join('')}</div>
     </section>`;
@@ -144,7 +151,7 @@ function pageHome() {
   app.innerHTML = `<div class="fade">
     <section class="hero wrap">
       <p class="eyebrow">Matematica e Fisica · istituti paritari</p>
-      <h1>I programmi del <em>Pertini</em>, del <em>Nasta</em> e del <em>Giovanni&nbsp;Paolo&nbsp;II</em>, classe per classe</h1>
+      <h1>I programmi del <em>Giovanni&nbsp;Paolo&nbsp;II</em>, del <em>Nasta</em> e del <em>Pertini</em>, classe per classe</h1>
       <p class="lead">Gli argomenti pubblicati da tre scuole paritarie, riordinati per indirizzo, classe e blocco tematico. Ogni programma rimanda al PDF originale.</p>
       ${searchForm('', false)}
       ${suggestChips()}

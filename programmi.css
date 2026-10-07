@@ -68,13 +68,10 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .bar-search[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 
 /* pagina iniziale */
-.hero{padding-block:56px 34px}
-.eyebrow{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
-.hero h1{font-size:clamp(2rem,5.6vw,3.4rem);max-width:20ch}
-.hero h1 em{font-style:normal;color:var(--gp2)}
-.hero h1 em:nth-of-type(2){color:var(--nasta)}
-.hero h1 em:nth-of-type(3){color:var(--pertini)}
-.hero .lead{font-size:1.12rem;color:var(--muted);max-width:58ch;margin:18px 0 26px}
+.home-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding-block:20px 22px}
+.home-top .searchbox{flex:1 1 320px;max-width:560px;box-shadow:none}
+.home-note{margin:0;color:var(--muted);font-size:14px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .searchbox{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line);border-radius:999px;padding:6px 8px 6px 18px;max-width:560px;box-shadow:var(--shadow)}
 .searchbox:focus-within{border-color:var(--ink)}
 .searchbox svg{color:var(--muted)}
@@ -86,8 +83,6 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;font-size:14px;color:var(--muted);align-items:center}
 .chips a{color:var(--ink);text-decoration:none;background:var(--surface-2);border-radius:999px;padding:5px 12px}
 .chips a:hover{background:var(--line)}
-.stats{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:30px;color:var(--muted);font-size:15px}
-.stats b{font-family:var(--f-display);font-size:1.7rem;color:var(--ink);display:block;line-height:1.1}
 
 .schools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:20px 28px;padding-bottom:56px;align-items:start}
 /* ogni scuola occupa due righe della griglia (intestazione, indirizzi) e le condivide con le vicine:
@@ -105,15 +100,21 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mono{color:#13161c}}
 .school-h h2{font-size:1.5rem;line-height:1.2}
 .tiles{display:grid;gap:12px;align-content:start}
-.tile{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px 16px;background:var(--surface);border-radius:var(--r);padding:16px 18px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:transform .15s ease,box-shadow .15s ease}
+.tile{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px 16px;background:var(--surface);border-radius:var(--r);padding:16px 18px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:transform .15s ease,box-shadow .15s ease}
 .tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
 .code{display:inline-grid;place-items:center;min-width:3.4em;padding:6px 8px;border-radius:10px;background:var(--cs);color:var(--cd);font-weight:700;font-size:13px;letter-spacing:.04em}
 .tile-name{font-family:var(--f-display);font-size:1.12rem;font-weight:650;line-height:1.25}
 .tile-type{font-size:14px;color:var(--muted);margin-top:2px}
 .tile .go{color:var(--faint)}
 .tile:hover .go{color:var(--c)}
-.years{grid-column:2/4;display:flex;gap:5px;margin-top:6px}
-.years span{display:grid;place-items:center;min-width:2.2em;height:1.7em;padding:0 4px;border-radius:7px;font-size:12px;font-weight:700;background:var(--cs);color:var(--cd)}
+.tile-link{color:inherit;text-decoration:none;outline:none}
+.tile-link::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.tile:has(.tile-link:focus-visible){outline:2.5px solid var(--link);outline-offset:2px}
+.years{position:relative;z-index:1;grid-column:2/4;display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.years a,.years span{display:grid;place-items:center;min-width:40px;height:34px;padding:0 6px;border-radius:9px;font-size:13.5px;font-weight:700;text-decoration:none;background:var(--cs);color:var(--cd)}
+.years a{transition:background .12s ease,color .12s ease}
+.years a:hover{background:var(--c);color:#fff}
+:root[data-theme="dark"] .years a:hover{color:#13161c}
 .years span.off{background:none;color:var(--faint);border:1px dashed var(--line);font-weight:400}
 
 /* pagina di un indirizzo */
@@ -220,7 +221,6 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 
 @media (max-width:600px){
   body{font-size:16.5px}
-  .hero{padding-block:34px 26px}
   .brand-txt span{display:none}
   .bar-search span{display:none}
   .bar-search{padding:8px 11px}

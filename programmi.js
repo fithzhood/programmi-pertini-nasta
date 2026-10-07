@@ -120,14 +120,16 @@ function tile(I) {
   const years = ROM.map((r, i) => {
     const ps = I.progs.filter(d => d.n === i + 1);
     if (!ps.length) return `<span class="off" title="Classe ${r}: non pubblicata">${r}</span>`;
-    return `<span title="Classe ${r}: ${esc([...new Set(ps.map(d => d.mat))].join(', '))}">${r}</span>`;
+    const first = ps.find(d => d.cat === 'mat') || ps[0];
+    return `<a href="${href(first)}" title="Classe ${r}: ${esc([...new Set(ps.map(d => d.mat))].join(', '))}" aria-label="${esc(I.code)} ${esc(I.S.short)}, classe ${r}">${r}</a>`;
   }).join('');
-  return `<a class="tile ${I.S.key}" href="#/${I.S.key}/${I.ck}">
+  // la scheda intera porta all'indirizzo; i riquadri delle classi, sopra, portano dritti alla classe
+  return `<div class="tile ${I.S.key}">
     <span class="code">${esc(I.code)}</span>
-    <div><div class="tile-name">${esc(I.ind)}</div><div class="tile-type">${esc(I.tipo)}</div></div>
+    <div><a class="tile-link" href="#/${I.S.key}/${I.ck}"><span class="tile-name">${esc(I.ind)}</span></a><span class="tile-type">${esc(I.tipo)}</span></div>
     <span class="go">${ICON.right}</span>
-    <div class="years" aria-label="Classi pubblicate">${years}</div>
-  </a>`;
+    <nav class="years" aria-label="Classi di ${esc(I.ind)}">${years}</nav>
+  </div>`;
 }
 
 function pageHome() {
@@ -149,16 +151,10 @@ function pageHome() {
     </section>`;
   }).join('');
   app.innerHTML = `<div class="fade">
-    <section class="hero wrap">
-      <p class="eyebrow">Matematica e Fisica · istituti paritari</p>
-      <h1>I programmi del <em>Giovanni&nbsp;Paolo&nbsp;II</em>, del <em>Nasta</em> e del <em>Pertini</em>, classe per classe</h1>
-      <p class="lead">Gli argomenti pubblicati da tre scuole paritarie, riordinati per indirizzo, classe e blocco tematico. Ogni programma rimanda al PDF originale.</p>
+    <section class="home-top wrap">
+      <h1 class="sr-only">Programmi di matematica e fisica di tre scuole paritarie</h1>
       ${searchForm('', false)}
-      ${suggestChips()}
-      <div class="stats">
-        <div><b>${ORDER.length}</b>istituti</div><div><b>${INDS.size}</b>indirizzi</div>
-        <div><b>${DATA.length}</b>programmi</div><div><b>${TOTAL_TOPICS.toLocaleString('it-IT')}</b>argomenti</div>
-      </div>
+      <p class="home-note">${ORDER.length} scuole · ${INDS.size} indirizzi · ${DATA.length} programmi</p>
     </section>
     <div class="wrap schools">${schools}</div>
   </div>`;

@@ -4,17 +4,17 @@
 
 const ROM = ['I', 'II', 'III', 'IV', 'V'];
 const SCHOOLS = {
-  GP2: { key: 'giovannipaolo2', name: 'Istituto Giovanni Paolo II', short: 'Giovanni Paolo II', title: 'Giovanni Paolo II', mono: 'GP',
+  GP2: { key: 'giovannipaolo2', name: 'Istituto Giovanni Paolo II', short: 'Giovanni Paolo II', title: 'Giovanni Paolo II', mono: 'GP', nav: 'Giovanni Paolo II', town: 'Ostia',
     city: 'Ostia (Roma)', addr: 'Corso Duca di Genova 157',
     site: 'https://www2.istitutogiovannipaolo2.it/indirizzi/', siteLbl: 'Indirizzi sul sito della scuola' },
-  Nasta: { key: 'nasta', name: 'Istituto Giuseppe Nasta', short: 'Nasta', title: 'Giuseppe Nasta', mono: 'GN',
+  Nasta: { key: 'nasta', name: 'Istituto Giuseppe Nasta', short: 'Nasta', title: 'Giuseppe Nasta', mono: 'GN', nav: 'Nasta', town: 'Corbara',
     city: 'Corbara (SA)', addr: 'Via Tenente Lignola 20',
     site: 'https://www.istitutoparitarionasta.it/indirizzi-di-studio/', siteLbl: 'Indirizzi sul sito della scuola' },
   // due scuole con lo stesso nome: Nocera (istitutosandropertini.com) e Montoro (istitutosandropertini.it)
-  Pertini: { key: 'pertini', name: 'Istituto Sandro Pertini di Nocera Inferiore', short: 'Pertini Nocera', title: 'Sandro Pertini · Nocera', mono: 'PN',
+  Pertini: { key: 'pertini', name: 'Istituto Sandro Pertini di Nocera Inferiore', short: 'Pertini Nocera', title: 'Sandro Pertini\u00a0· Nocera', mono: 'PN', nav: 'Pertini', town: 'Nocera Inferiore',
     city: 'Nocera Inferiore (SA)', addr: 'Via Cicalesi 19',
     site: 'https://www.istitutosandropertini.com/programma_scolastico', siteLbl: 'Programmi sul sito della scuola' },
-  PertiniMontoro: { key: 'pertini-montoro', name: 'Istituto Sandro Pertini di Montoro', short: 'Pertini Montoro', title: 'Sandro Pertini · Montoro', mono: 'PM',
+  PertiniMontoro: { key: 'pertini-montoro', name: 'Istituto Sandro Pertini di Montoro', short: 'Pertini Montoro', title: 'Sandro Pertini\u00a0· Montoro', mono: 'PM', nav: 'Pertini', town: 'Montoro',
     city: 'Borgo di Montoro (AV)', addr: 'Via Mercatello 84',
     site: 'https://www.istitutosandropertini.it/indirizzi-di-studio/', siteLbl: 'Indirizzi sul sito della scuola' },
 };
@@ -154,12 +154,22 @@ function pageHome() {
       <div class="tiles">${inds.map(tile).join('')}</div>
     </section>`;
   }).join('');
+  // indice delle scuole: tutte visibili subito, anche quando le colonne vanno a capo (o sul telefono, una sotto l'altra)
+  const index = ORDER.map(ist => {
+    const S = SCHOOLS[ist];
+    const n = [...INDS.values()].filter(I => I.ist === ist).length;
+    return `<button type="button" class="si ${S.key}" data-goto="${S.key}">
+      <span class="mono" aria-hidden="true">${S.mono}</span>
+      <span class="si-txt"><b>${S.nav}</b><span>${S.town}</span><small>${plural(n, 'indirizzo', 'indirizzi')}</small></span>
+    </button>`;
+  }).join('');
   app.innerHTML = `<div class="fade">
     <section class="home-top wrap">
-      <h1 class="sr-only">Programmi di matematica e fisica di tre scuole paritarie</h1>
+      <h1 class="sr-only">Programmi di matematica e fisica di ${ORDER.length} scuole paritarie</h1>
       ${searchForm('', false)}
       <p class="home-note">${ORDER.length} scuole · ${INDS.size} indirizzi · ${DATA.length} programmi</p>
     </section>
+    <nav class="wrap school-index" aria-label="Vai a una scuola">${index}</nav>
     <div class="wrap schools">${schools}</div>
   </div>`;
 }
@@ -365,6 +375,11 @@ document.addEventListener('submit', e => {
 });
 document.addEventListener('click', e => {
   if (e.target.closest('[data-print]')) window.print();
+  const go = e.target.closest('[data-goto]');
+  if (go) {
+    const sec = document.querySelector('section.school.' + go.dataset.goto);
+    if (sec) { sec.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); sec.querySelector('.tile-link')?.focus({ preventScroll: true }); }
+  }
   if (e.target.closest('[data-theme-toggle]')) setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 });
 function setTheme(t) {

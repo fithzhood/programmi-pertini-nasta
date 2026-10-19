@@ -88,7 +88,24 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .chips a{color:var(--ink);text-decoration:none;background:var(--surface-2);border-radius:999px;padding:5px 12px}
 .chips a:hover{background:var(--line)}
 
-.schools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:20px 28px;padding-bottom:56px;align-items:start}
+/* indice delle scuole sotto la ricerca: quattro schede affiancate (due per riga sul telefono) */
+.school-index{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;padding-bottom:28px}
+.si{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px;padding:12px 14px;border:0;border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.si:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
+.si:focus-visible{outline:2.5px solid var(--link);outline-offset:2px}
+.si .mono{width:44px;height:44px;border-radius:13px;font-size:17px}
+.si-txt{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.si-txt b{font-family:var(--f-display);font-size:1.1rem;font-weight:650}
+.si-txt span{font-size:14px;color:var(--c);font-weight:700}
+.si-txt small{font-size:13px;color:var(--muted)}
+.si-txt>*{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* quando le quattro colonne stanno affiancate l'indice ripeterebbe le intestazioni: lo nascondo */
+@media (min-width:1270px){.school-index{display:none}}
+
+/* le scuole in colonne: quattro affiancate sugli schermi larghi (la pagina iniziale si allarga oltre la misura di lettura) */
+.wrap.home-top,.wrap.schools,.wrap.school-index{max-width:1440px}
+.schools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:20px 24px;padding-bottom:56px;align-items:start}
+.tiles{container-type:inline-size}
 /* ogni scuola occupa due righe della griglia (intestazione, indirizzi) e le condivide con le vicine:
    così le intestazioni hanno la stessa altezza e gli elenchi partono alla stessa quota */
 .school{display:grid;grid-row:span 2;grid-template-rows:subgrid;row-gap:16px;min-width:0}
@@ -103,7 +120,7 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 :root[data-theme="dark"] .mono{color:#13161c}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mono{color:#13161c}}
 .school-h h2{font-size:1.5rem;line-height:1.2}
-.tiles{display:grid;gap:12px;align-content:start}
+.tiles{display:grid;gap:12px;align-content:start;min-width:0}
 .tile{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px 16px;background:var(--surface);border-radius:var(--r);padding:16px 18px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:transform .15s ease,box-shadow .15s ease}
 .tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
 .code{display:inline-grid;place-items:center;min-width:3.4em;padding:6px 8px;border-radius:10px;background:var(--cs);color:var(--cd);font-weight:700;font-size:13px;letter-spacing:.04em}
@@ -120,6 +137,8 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .years a:hover{background:var(--c);color:#fff}
 :root[data-theme="dark"] .years a:hover{color:#13161c}
 .years span.off{background:none;color:var(--faint);border:1px dashed var(--line);font-weight:400}
+/* colonna stretta: i riquadri delle classi passano sotto la sigla invece di andare a capo */
+@container (max-width:330px){.years{grid-column:1/4}}
 
 /* pagina di un indirizzo */
 .crumbs{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-size:14px;color:var(--muted);padding-top:22px}
@@ -225,6 +244,12 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 
 @media (max-width:600px){
   body{font-size:16.5px}
+  .school-index{grid-template-columns:1fr 1fr;gap:10px}
+  .si{gap:10px;padding:10px 12px}
+  .si .mono{width:38px;height:38px;border-radius:11px;font-size:15px}
+  .si{align-items:start}
+  .si-txt>*{white-space:normal}
+  .si-txt b{font-size:1rem}
   .brand-txt span{display:none}
   .bar-search span{display:none}
   .bar-search{padding:8px 11px}

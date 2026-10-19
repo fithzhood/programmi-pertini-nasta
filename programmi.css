@@ -6,6 +6,7 @@
   --pertini:#0d6e6a; --pertini-soft:#ddefec; --pertini-deep:#0a4f4c;
   --nasta:#b0531f; --nasta-soft:#f8e7da; --nasta-deep:#7f3a14;
   --gp2:#5b3fa6; --gp2-soft:#ebe5f7; --gp2-deep:#3f2a7a;
+  --pm:#a23353; --pm-soft:#f7e1e7; --pm-deep:#74203a;
   --shadow:0 1px 2px rgba(29,35,48,.05),0 4px 14px rgba(29,35,48,.05);
   --shadow-up:0 2px 4px rgba(29,35,48,.06),0 12px 28px rgba(29,35,48,.10);
   --f-display:"Fraunces", Georgia, "Times New Roman", serif;
@@ -20,6 +21,7 @@
   --pertini:#5cc8c0; --pertini-soft:#173634; --pertini-deep:#9fe3dc;
   --nasta:#f0a06a; --nasta-soft:#3b2618; --nasta-deep:#ffc79d;
   --gp2:#b9a2f2; --gp2-soft:#2a2242; --gp2-deep:#ddd0ff;
+  --pm:#f08aa5; --pm-soft:#3a1a24; --pm-deep:#ffc2d2;
   --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-up:0 6px 22px rgba(0,0,0,.4);
   color-scheme:dark }}
 :root[data-theme="dark"]{
@@ -29,12 +31,14 @@
   --pertini:#5cc8c0; --pertini-soft:#173634; --pertini-deep:#9fe3dc;
   --nasta:#f0a06a; --nasta-soft:#3b2618; --nasta-deep:#ffc79d;
   --gp2:#b9a2f2; --gp2-soft:#2a2242; --gp2-deep:#ddd0ff;
+  --pm:#f08aa5; --pm-soft:#3a1a24; --pm-deep:#ffc2d2;
   --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-up:0 6px 22px rgba(0,0,0,.4);
   color-scheme:dark }
 
 .pertini{--c:var(--pertini);--cs:var(--pertini-soft);--cd:var(--pertini-deep)}
 .nasta{--c:var(--nasta);--cs:var(--nasta-soft);--cd:var(--nasta-deep)}
 .giovannipaolo2{--c:var(--gp2);--cs:var(--gp2-soft);--cd:var(--gp2-deep)}
+.pertini-montoro{--c:var(--pm);--cs:var(--pm-soft);--cd:var(--pm-deep)}
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:76px}

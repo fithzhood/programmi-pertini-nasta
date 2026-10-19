@@ -1,4 +1,4 @@
-/* Programmi di matematica e fisica (Pertini, Nasta, Giovanni Paolo II) — sito a una pagina con indirizzi navigabili (#/scuola/indirizzo/classe/materia) */
+/* Programmi di matematica e fisica (Pertini di Nocera e di Montoro, Nasta, Giovanni Paolo II) — sito a una pagina con indirizzi navigabili (#/scuola/indirizzo/classe/materia) */
 (() => {
 'use strict';
 
@@ -10,11 +10,15 @@ const SCHOOLS = {
   Nasta: { key: 'nasta', name: 'Istituto Giuseppe Nasta', short: 'Nasta', title: 'Giuseppe Nasta', mono: 'GN',
     city: 'Corbara (SA)', addr: 'Via Tenente Lignola 20',
     site: 'https://www.istitutoparitarionasta.it/indirizzi-di-studio/', siteLbl: 'Indirizzi sul sito della scuola' },
-  Pertini: { key: 'pertini', name: 'Istituto Sandro Pertini', short: 'Pertini', title: 'Sandro Pertini', mono: 'SP',
+  // due scuole con lo stesso nome: Nocera (istitutosandropertini.com) e Montoro (istitutosandropertini.it)
+  Pertini: { key: 'pertini', name: 'Istituto Sandro Pertini di Nocera Inferiore', short: 'Pertini Nocera', title: 'Sandro Pertini · Nocera', mono: 'PN',
     city: 'Nocera Inferiore (SA)', addr: 'Via Cicalesi 19',
     site: 'https://www.istitutosandropertini.com/programma_scolastico', siteLbl: 'Programmi sul sito della scuola' },
+  PertiniMontoro: { key: 'pertini-montoro', name: 'Istituto Sandro Pertini di Montoro', short: 'Pertini Montoro', title: 'Sandro Pertini · Montoro', mono: 'PM',
+    city: 'Borgo di Montoro (AV)', addr: 'Via Mercatello 84',
+    site: 'https://www.istitutosandropertini.it/indirizzi-di-studio/', siteLbl: 'Indirizzi sul sito della scuola' },
 };
-const ORDER = ['GP2', 'Nasta', 'Pertini'];
+const ORDER = ['GP2', 'Nasta', 'Pertini', 'PertiniMontoro'];
 // l'ordine delle scuole vale ovunque: pagina iniziale, ricerca, elenchi
 DATA.sort((a, b) => ORDER.indexOf(a.ist) - ORDER.indexOf(b.ist));
 const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
@@ -133,7 +137,7 @@ function tile(I) {
 }
 
 function pageHome() {
-  document.title = 'Programmi di Matematica e Fisica · Giovanni Paolo II, Nasta, Pertini';
+  document.title = 'Programmi di Matematica e Fisica · Giovanni Paolo II, Nasta, Pertini (Nocera e Montoro)';
   const schools = ORDER.map(ist => {
     const S = SCHOOLS[ist];
     const inds = [...INDS.values()].filter(I => I.ist === ist);

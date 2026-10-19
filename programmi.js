@@ -388,7 +388,7 @@ function setTheme(t) {
   const b = document.querySelector('[data-theme-toggle]');
   if (b) b.setAttribute('aria-label', t === 'dark' ? 'Passa al tema chiaro' : 'Passa al tema scuro');
   const m = document.querySelector('meta[name="theme-color"]');
-  if (m) m.content = t === 'dark' ? '#13161c' : '#f7f5f0';
+  if (m) m.content = t === 'dark' ? '#101318' : '#f7f5f0';
 }
 setTheme(document.documentElement.getAttribute('data-theme') || 'light');
 addEventListener('scroll', stick, { passive: true });

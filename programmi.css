@@ -1,4 +1,5 @@
-/* Programmi di matematica e fisica — carta chiara, un colore per scuola, blocchi da leggere */
+/* Programmi di matematica e fisica — carta chiara, un colore per scuola, blocchi da leggere.
+   Tema scuro: i riquadri si staccano dal fondo con un filo chiaro dentro --shadow, perché l'ombra sul nero non si vede. */
 :root{
   --bg:#f7f5f0; --surface:#ffffff; --surface-2:#f0ede6; --ink:#1d2330; --muted:#5f6673; --faint:#9a9fa8; --line:#e4e0d6;
   --link:#2f4fb3; --mark:#ffe28a; --mark-ink:#1d2330;
@@ -15,24 +16,24 @@
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#13161c; --surface:#1b2029; --surface-2:#222833; --ink:#e8eaee; --muted:#a2aab6; --faint:#6c7480; --line:#2c333f;
+  --bg:#101318; --surface:#1d232c; --surface-2:#252c37; --ink:#e8eaee; --muted:#a2aab6; --faint:#6c7480; --line:#343c49;
   --link:#9db2ff; --mark:#6b5a12; --mark-ink:#fff6cf;
   --warn:#f1c35d; --warn-soft:#3a2f12;
   --pertini:#5cc8c0; --pertini-soft:#173634; --pertini-deep:#9fe3dc;
   --nasta:#f0a06a; --nasta-soft:#3b2618; --nasta-deep:#ffc79d;
   --gp2:#b9a2f2; --gp2-soft:#2a2242; --gp2-deep:#ddd0ff;
   --pm:#f08aa5; --pm-soft:#3a1a24; --pm-deep:#ffc2d2;
-  --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-up:0 6px 22px rgba(0,0,0,.4);
+  --shadow:0 0 0 1px #2e3642,0 1px 2px rgba(0,0,0,.45),0 6px 16px rgba(0,0,0,.25); --shadow-up:0 0 0 1px #46505f,0 8px 24px rgba(0,0,0,.5);
   color-scheme:dark }}
 :root[data-theme="dark"]{
-  --bg:#13161c; --surface:#1b2029; --surface-2:#222833; --ink:#e8eaee; --muted:#a2aab6; --faint:#6c7480; --line:#2c333f;
+  --bg:#101318; --surface:#1d232c; --surface-2:#252c37; --ink:#e8eaee; --muted:#a2aab6; --faint:#6c7480; --line:#343c49;
   --link:#9db2ff; --mark:#6b5a12; --mark-ink:#fff6cf;
   --warn:#f1c35d; --warn-soft:#3a2f12;
   --pertini:#5cc8c0; --pertini-soft:#173634; --pertini-deep:#9fe3dc;
   --nasta:#f0a06a; --nasta-soft:#3b2618; --nasta-deep:#ffc79d;
   --gp2:#b9a2f2; --gp2-soft:#2a2242; --gp2-deep:#ddd0ff;
   --pm:#f08aa5; --pm-soft:#3a1a24; --pm-deep:#ffc2d2;
-  --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-up:0 6px 22px rgba(0,0,0,.4);
+  --shadow:0 0 0 1px #2e3642,0 1px 2px rgba(0,0,0,.45),0 6px 16px rgba(0,0,0,.25); --shadow-up:0 0 0 1px #46505f,0 8px 24px rgba(0,0,0,.5);
   color-scheme:dark }
 
 .pertini{--c:var(--pertini);--cs:var(--pertini-soft);--cd:var(--pertini-deep)}
